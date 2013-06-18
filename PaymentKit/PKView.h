@@ -40,4 +40,11 @@
 @property (weak) id <PKViewDelegate> delegate;
 @property (readonly) PKCard* card;
 
+
+//Additions to Fork
+
+@property (nonatomic) UIImageView *backgroundImageView;
+
+- (instancetype)initWithFrame:(CGRect)frame andShouldHaveFocus:(BOOL)passedBool;
+
 @end

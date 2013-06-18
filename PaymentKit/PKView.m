@@ -55,9 +55,22 @@
 
 @implementation PKView
 
+bool _shouldHaveFocus = NO;
+
 @synthesize innerView, opaqueOverGradientView, cardNumberField,
             cardExpiryField, cardCVCField,
             placeholderView, delegate;
+
+- (instancetype)initWithFrame:(CGRect)frame andShouldHaveFocus:(BOOL)passedBool {
+    
+    self = [super initWithFrame:frame];
+    if (self) {
+        _shouldHaveFocus = passedBool;
+        [self setup];
+    }
+    return self;
+}
+
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -79,13 +92,12 @@
     isInitialState = YES;
     isValidState   = NO;
     
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 290, 46);
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 270, 46);
     self.backgroundColor = [UIColor clearColor];
     
-    UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];
-    backgroundImageView.image = [[UIImage imageNamed:@"textfield"]
-                                 resizableImageWithCapInsets:UIEdgeInsetsMake(0, 8, 0, 8)];
-    [self addSubview:backgroundImageView];
+    self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+    
+    [self addSubview:self.backgroundImageView];
     
     self.innerView = [[UIView alloc] initWithFrame:CGRectMake(40, 12, self.frame.size.width - 40, 20)];
     self.innerView.clipsToBounds = YES;
@@ -110,7 +122,8 @@
     [self addSubview:self.innerView];
     [self addSubview:placeholderView];
     
-    [self stateCardNumber];
+    if (_shouldHaveFocus)
+        [self stateCardNumber];
 }
 
 
@@ -264,9 +277,10 @@
 }
 
 - (BOOL)isValid
-{    
+{
+    PKCardType cardType = [[PKCardNumber cardNumberWithString:cardNumberField.text] cardType];
     return [self.cardNumber isValid] && [self.cardExpiry isValid] &&
-           [self.cardCVC isValid];
+           [self.cardCVC isValidWithType:cardType];
 }
 
 - (PKCard*)card
