@@ -144,7 +144,8 @@
 
 - (BOOL)isValid
 {
-    return [self isValidLength] && [self isValidLuhn];
+    //Mod to prevent the use of Diner's Club and JCB cards - JS (07/15/13)
+    return ([self isValidLength] && [self isValidLuhn]) && ([self cardType] != PKCardTypeDinersClub && [self cardType] != PKCardTypeJCB);
 }
 
 - (BOOL)isValidLength

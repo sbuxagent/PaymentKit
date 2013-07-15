@@ -347,13 +347,15 @@ bool _shouldHaveFocus = NO;
             cardTypeName = @"amex";
             break;
         case PKCardTypeDinersClub:
-            cardTypeName = @"diners";
+            cardTypeName = @"invalidCard";
+//            cardTypeName = @"diners";
             break;
         case PKCardTypeDiscover:
             cardTypeName = @"discover";
             break;
         case PKCardTypeJCB:
-            cardTypeName = @"jcb";
+            cardTypeName = @"invalidCard";
+//            cardTypeName = @"jcb";
             break;
         case PKCardTypeMasterCard:
             cardTypeName = @"mastercard";
@@ -434,6 +436,11 @@ bool _shouldHaveFocus = NO;
         
     } else if (![cardNumber isValidLength]) {
         [self textFieldIsInvalid:cardNumberField withErrors:NO];
+    }
+    
+    // Mod to prevent the use of Diner's Club and JCB cards - JS (07/15/13)
+    if ([cardNumber cardType] == PKCardTypeJCB || [cardNumber cardType] == PKCardTypeDinersClub) {
+        [self textFieldIsInvalid:cardNumberField withErrors:YES];
     }
     
     return NO;
