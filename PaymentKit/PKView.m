@@ -92,15 +92,16 @@ bool _shouldHaveFocus = NO;
     isInitialState = YES;
     isValidState   = NO;
     
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 270, 46);
+//    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 270, 46);
     self.backgroundColor = [UIColor clearColor];
     
     self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];
     
     [self addSubview:self.backgroundImageView];
     
-    self.innerView = [[UIView alloc] initWithFrame:CGRectMake(40, 12, self.frame.size.width - 40, 20)];
+    self.innerView = [[UIView alloc] initWithFrame:CGRectMake(40, 0, self.frame.size.width - 40, self.frame.size.height)];
     self.innerView.clipsToBounds = YES;
+    self.innerView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     
     [self setupPlaceholderView];
     [self setupCardNumberField];
@@ -108,16 +109,8 @@ bool _shouldHaveFocus = NO;
     [self setupCardCVCField];
     
     [self.innerView addSubview:cardNumberField];
-    
-    UIImageView *gradientImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 12, 34)];
-    gradientImageView.image = [UIImage imageNamed:@"gradient"];
-    [self.innerView addSubview:gradientImageView];
-    
-    opaqueOverGradientView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 9, 34)];
-    opaqueOverGradientView.backgroundColor = [UIColor colorWithRed:0.9686 green:0.9686
-                                                              blue:0.9686 alpha:1.0000];
-    opaqueOverGradientView.alpha = 0.0;
-    [self.innerView addSubview:opaqueOverGradientView];
+    [self.innerView addSubview:cardExpiryField];
+    [self.innerView addSubview:cardCVCField];
     
     [self addSubview:self.innerView];
     [self addSubview:placeholderView];
@@ -129,9 +122,12 @@ bool _shouldHaveFocus = NO;
 
 - (void)setupPlaceholderView
 {
-    placeholderView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 32, 20)];
-    placeholderView.backgroundColor = [UIColor clearColor];
-    placeholderView.image = [UIImage imageNamed:@"placeholder"];
+    UIImage *pImage = [UIImage imageNamed:@"placeholder"];
+    placeholderView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 0, 32, self.bounds.size.height)];
+    placeholderView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    placeholderView.contentMode = UIViewContentModeCenter;
+    placeholderView.backgroundColor = [UIColor starbucksWhite];
+    placeholderView.image = pImage;
     
     CALayer *clip = [CALayer layer];
     clip.frame = CGRectMake(32, 0, 4, 20);
@@ -141,12 +137,14 @@ bool _shouldHaveFocus = NO;
 
 - (void)setupCardNumberField
 {
-    cardNumberField = [[PKTextField alloc] initWithFrame:CGRectMake(12,0,170,20)];
+    cardNumberField = [[PKTextField alloc] initWithFrame:CGRectMake(12,0,170,self.bounds.size.height)];
+    cardNumberField.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     
     cardNumberField.delegate = self;
     
     cardNumberField.placeholder = @"1234 5678 9012 3456";
     cardNumberField.keyboardType = UIKeyboardTypeNumberPad;
+    cardNumberField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     cardNumberField.textColor = DarkGreyColor;
     cardNumberField.font = DefaultBoldFont;
     
@@ -156,12 +154,14 @@ bool _shouldHaveFocus = NO;
 - (void)setupCardExpiryField
 {
     cardExpiryField = [[PKTextField alloc] initWithFrame:CGRectMake(kPKViewCardExpiryFieldStartX,0,
-                                                                    60,20)];
+                                                                    60,self.bounds.size.height)];
+    cardExpiryField.autoresizingMask = UIViewAutoresizingFlexibleHeight;
 
     cardExpiryField.delegate = self;
     
     cardExpiryField.placeholder = @"MM/YY";
     cardExpiryField.keyboardType = UIKeyboardTypeNumberPad;
+    cardExpiryField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     cardExpiryField.textColor = DarkGreyColor;
     cardExpiryField.font = DefaultBoldFont;
     
@@ -171,12 +171,14 @@ bool _shouldHaveFocus = NO;
 - (void)setupCardCVCField
 {
     cardCVCField = [[PKTextField alloc] initWithFrame:CGRectMake(kPKViewCardCVCFieldStartX,0,
-                                                                 55,20)];
+                                                                 55,self.bounds.size.height)];
+    cardCVCField.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     
     cardCVCField.delegate = self;
     
     cardCVCField.placeholder = @"CVC";
     cardCVCField.keyboardType = UIKeyboardTypeNumberPad;
+    cardCVCField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     cardCVCField.textColor = DarkGreyColor;
     cardCVCField.font = DefaultBoldFont;
     
