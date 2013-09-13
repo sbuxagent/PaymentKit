@@ -174,7 +174,16 @@
         sum += digit;
     }
     
-    return sum % 10 == 0;
+    BOOL retValue = NO;
+    
+    if ((sum % 10 == 0) && sum != 0) {
+        retValue = YES;
+    }
+    else {
+        retValue = NO;
+    }
+    
+    return retValue;
 }
 
 - (BOOL)isPartiallyValid
