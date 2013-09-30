@@ -131,7 +131,7 @@ bool _shouldHaveFocus = NO;
     placeholderView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 0, 32, self.bounds.size.height)];
     placeholderView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     placeholderView.contentMode = UIViewContentModeCenter;
-    placeholderView.backgroundColor = [UIColor starbucksWhite];
+    placeholderView.backgroundColor = [UIColor clearColor];
     placeholderView.image = pImage;
     
     CALayer *clip = [CALayer layer];
