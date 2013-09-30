@@ -29,6 +29,8 @@
     BOOL isValidState;
 }
 
+@property (nonatomic, readwrite) UIView *opaqueOverGradientView;
+
 - (void)setup;
 - (void)setupPlaceholderView;
 - (void)setupCardNumberField;
@@ -92,11 +94,10 @@ bool _shouldHaveFocus = NO;
     isInitialState = YES;
     isValidState   = NO;
     
-//    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 270, 46);
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 46);
     self.backgroundColor = [UIColor clearColor];
     
     self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];
-    
     [self addSubview:self.backgroundImageView];
     
     self.innerView = [[UIView alloc] initWithFrame:CGRectMake(40, 0, self.frame.size.width - 40, self.frame.size.height)];
@@ -112,7 +113,11 @@ bool _shouldHaveFocus = NO;
     [self.innerView addSubview:cardExpiryField];
     [self.innerView addSubview:cardCVCField];
     
+    self.opaqueOverGradientView = [[UIView alloc] initWithFrame:CGRectMake(40, 15, 10, 20)];
+    self.opaqueOverGradientView.backgroundColor = [UIColor starbucksWhite];
+    
     [self addSubview:self.innerView];
+    [self addSubview:self.opaqueOverGradientView];
     [self addSubview:placeholderView];
     
     if (_shouldHaveFocus)
@@ -137,7 +142,7 @@ bool _shouldHaveFocus = NO;
 
 - (void)setupCardNumberField
 {
-    cardNumberField = [[PKTextField alloc] initWithFrame:CGRectMake(12,0,170,self.bounds.size.height)];
+    cardNumberField = [[PKTextField alloc] initWithFrame:CGRectMake(12,0,self.bounds.size.width,self.bounds.size.height)];
     cardNumberField.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     
     cardNumberField.delegate = self;
