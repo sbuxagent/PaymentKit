@@ -286,8 +286,7 @@ bool _shouldHaveFocus = NO;
 - (BOOL)isValid
 {
     PKCardType cardType = [[PKCardNumber cardNumberWithString:cardNumberField.text] cardType];
-    return [self.cardNumber isValid] && [self.cardExpiry isValid] &&
-           [self.cardCVC isValidWithType:cardType];
+    return [self.cardNumber isValid] && [self.cardExpiry isValid] && [self.cardCVC isValidWithType:cardType];
 }
 
 - (PKCard*)card
@@ -434,20 +433,24 @@ bool _shouldHaveFocus = NO;
     
     [self setPlaceholderToCardType];
     
+    BOOL cardNumberIsValidLength = [cardNumber isValidLength];
+    
     if ([cardNumber isValid]) {
         [self textFieldIsValid:cardNumberField];
         [self stateMeta];
         
-    } else if ([cardNumber isValidLength] && ![cardNumber isValidLuhn]) {
+    } else if (cardNumberIsValidLength && ![cardNumber isValidLuhn]) {
         [self textFieldIsInvalid:cardNumberField withErrors:YES];
         
-    } else if (![cardNumber isValidLength]) {
+    } else if (!cardNumberIsValidLength) {
         [self textFieldIsInvalid:cardNumberField withErrors:NO];
     }
-    
-    // Mod to prevent the use of Diner's Club and JCB cards - JS (07/15/13)
-    if ([cardNumber cardType] == PKCardTypeJCB || [cardNumber cardType] == PKCardTypeDinersClub) {
-        [self textFieldIsInvalid:cardNumberField withErrors:YES];
+    else {
+        // Mod to prevent the use of Diner's Club and JCB cards - JS (07/15/13)
+        PKCardType cardType = [cardNumber cardType];
+        if (cardType == PKCardTypeJCB || cardType == PKCardTypeDinersClub || cardType == PKCardTypeUnknown) {
+            [self textFieldIsInvalid:cardNumberField withErrors:YES];
+        }
     }
     
     return NO;
