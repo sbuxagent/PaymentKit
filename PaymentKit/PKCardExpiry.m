@@ -93,9 +93,26 @@
 
 - (BOOL)isValidDate
 {
-    if ([self month] <= 0 || [self month] > 12) return false;
+    if ([self month] <= 0 || [self month] > 12)
+        
+        return false;
     
-    NSDate* now = [NSDate date];
+    // Starbucks.com allows users to add a credit card that expires at the end of the current month.
+    // PKCardExpiry constructs a date using month/01/year and compares to [NSDate date]
+    // This small refactor simply checks to see if the month provided is the current month and then verifies that the
+    // expiration year is greater than or equal to the current year.
+    
+    NSDate *now = [NSDate date];
+    
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:now];
+    
+    NSInteger currentMonth = [components month];
+    NSInteger currentYear = [components year];
+    
+    if ([self month] == currentMonth) {
+        return [self year] >= currentYear;
+    }
+    
     return [[self expiryDate] compare:now] == NSOrderedDescending;
 }
 
