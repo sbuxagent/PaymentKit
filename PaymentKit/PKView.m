@@ -130,7 +130,7 @@ bool _shouldHaveFocus = NO;
     UIImage *pImage = [UIImage imageNamed:@"placeholder"];
     placeholderView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 0, 32, self.bounds.size.height)];
     placeholderView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    placeholderView.contentMode = UIViewContentModeCenter;
+    placeholderView.contentMode = UIViewContentModeScaleAspectFit;
     placeholderView.backgroundColor = [UIColor clearColor];
     placeholderView.image = pImage;
     
