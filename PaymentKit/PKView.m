@@ -438,9 +438,15 @@ bool _shouldHaveFocus = NO;
     if ([cardNumber isValid]) {
         [self textFieldIsValid:cardNumberField];
         [self stateMeta];
+        if([self.delegate respondsToSelector:@selector(paymentView:numberIsValid:)]) {
+            [self.delegate paymentView:self numberIsValid:YES];
+        }
         
     } else if (cardNumberIsValidLength && ![cardNumber isValidLuhn]) {
         [self textFieldIsInvalid:cardNumberField withErrors:YES];
+        if([self.delegate respondsToSelector:@selector(paymentView:numberIsValid:)]) {
+            [self.delegate paymentView:self numberIsValid:NO];
+        }
         
     } else if (!cardNumberIsValidLength) {
         [self textFieldIsInvalid:cardNumberField withErrors:NO];
