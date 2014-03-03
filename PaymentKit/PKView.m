@@ -426,6 +426,8 @@ bool _shouldHaveFocus = NO;
         return NO;
     
     UITextRange* currentSelection = cardNumberField.selectedTextRange;
+    NSInteger startOffset = [cardNumberField offsetFromPosition:cardNumberField.beginningOfDocument toPosition:currentSelection.start];
+    
     if (replacementString.length > 0) {
         cardNumberField.text = [cardNumber formattedStringWithTrail];
     } else {
@@ -460,10 +462,12 @@ bool _shouldHaveFocus = NO;
         }
     }
     
+    UITextPosition* start = [cardNumberField positionFromPosition:cardNumberField.beginningOfDocument offset:startOffset];
+    UITextPosition* originalStart = [cardNumberField positionFromPosition:cardNumberField.beginningOfDocument offset:startOffset];
+    UITextPosition* endOfDocument = cardNumberField.endOfDocument;
+    
     if(range.length > 0 && [replacementString isEqualToString:@""]) {
         // backspace (and delete, for that matter)
-        UITextPosition *start = currentSelection.start;
-        UITextPosition* endOfDocument = cardNumberField.endOfDocument;
         
         if(currentSelection.empty) {
             start = [cardNumberField positionFromPosition:start offset:-1];
@@ -471,30 +475,23 @@ bool _shouldHaveFocus = NO;
         if(!start) {
             start = endOfDocument;
         }
-        
-        UITextPosition *end = start;
-        currentSelection = [cardNumberField textRangeFromPosition:start toPosition:end];
-        cardNumberField.selectedTextRange = currentSelection;
     }
     else {
-        UITextPosition *start = currentSelection.start;
         start = [cardNumberField positionFromPosition:start offset:replacementString.length];
         
         if(!start) {
-            start = cardNumberField.endOfDocument;
+            start = endOfDocument;
         }
         
-        NSString* charRightBeforeTheNewInsertionPoint = [cardNumberField textInRange:[cardNumberField textRangeFromPosition:start toPosition:currentSelection.start]];
+        NSString* charRightBeforeTheNewInsertionPoint = [cardNumberField textInRange:[cardNumberField textRangeFromPosition:start toPosition:originalStart]];
         
         if([charRightBeforeTheNewInsertionPoint isEqualToString:@" "]) {
             start = [cardNumberField positionFromPosition:start offset:1];
         }
-        
-        UITextPosition *end = start;
-        currentSelection = [cardNumberField textRangeFromPosition:start toPosition:end];
-        cardNumberField.selectedTextRange = currentSelection;
     }
-    
+    UITextPosition *end = start;
+    currentSelection = [cardNumberField textRangeFromPosition:start toPosition:end];
+    cardNumberField.selectedTextRange = currentSelection;
     
     return NO;
 }
