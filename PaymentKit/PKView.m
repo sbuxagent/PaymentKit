@@ -459,6 +459,9 @@ bool _shouldHaveFocus = NO;
         PKCardType cardType = [cardNumber cardType];
         if (cardType == PKCardTypeJCB || cardType == PKCardTypeDinersClub || cardType == PKCardTypeUnknown) {
             [self textFieldIsInvalid:cardNumberField withErrors:YES];
+            if([self.delegate respondsToSelector:@selector(paymentView:numberIsValid:)]) {
+                [self.delegate paymentView:self numberIsValid:NO];
+            }
         }
     }
     
